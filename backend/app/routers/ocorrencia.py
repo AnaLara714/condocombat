@@ -51,7 +51,7 @@ async def obter(ocorrencia_id: int, service: OcorrenciaService = Depends(_get_se
     try:
         return await service.buscar(ocorrencia_id)
     except OcorrenciaNaoEncontrada as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 @router.post("/", response_model=OcorrenciaRead, status_code=status.HTTP_201_CREATED)
@@ -87,9 +87,9 @@ async def atualizar(
     try:
         ocorrencia = await service.atualizar(ocorrencia_id, update_data)
     except OcorrenciaNaoEncontrada as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
     except TransicaoStatusInvalida as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
 
     await _broadcast_event(
         EventType.OCORRENCIA_ATUALIZADA,
@@ -104,7 +104,7 @@ async def remover(ocorrencia_id: int, service: OcorrenciaService = Depends(_get_
     try:
         await service.remover(ocorrencia_id)
     except OcorrenciaNaoEncontrada as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
     await _broadcast_event(
         EventType.OCORRENCIA_REMOVIDA,

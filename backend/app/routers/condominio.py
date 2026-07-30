@@ -30,11 +30,11 @@ async def obter(condominio_id: int, service: CondominioService = Depends(_get_se
     """Obtém um condomínio pelo ID."""
     try:
         return await service.buscar(condominio_id)
-    except CondominioNaoEncontrado:
+    except CondominioNaoEncontrado as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Condomínio {condominio_id} não encontrado",
-        )
+        ) from exc
 
 
 @router.post("/", response_model=CondominioRead, status_code=status.HTTP_201_CREATED)
@@ -46,7 +46,7 @@ async def criar(data: CondominioCreate, service: CondominioService = Depends(_ge
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
-        )
+        ) from exc
 
 
 @router.put("/{condominio_id}", response_model=CondominioRead)
@@ -58,16 +58,16 @@ async def atualizar(
     """Atualiza um condomínio existente."""
     try:
         return await service.atualizar(condominio_id, data)
-    except CondominioNaoEncontrado:
+    except CondominioNaoEncontrado as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Condomínio {condominio_id} não encontrado",
-        )
+        ) from exc
     except CondominioJaExiste as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
-        )
+        ) from exc
 
 
 @router.delete("/{condominio_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -75,8 +75,8 @@ async def remover(condominio_id: int, service: CondominioService = Depends(_get_
     """Remove um condomínio."""
     try:
         await service.remover(condominio_id)
-    except CondominioNaoEncontrado:
+    except CondominioNaoEncontrado from exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Condomínio {condominio_id} não encontrado",
-        )
+        ) from exc

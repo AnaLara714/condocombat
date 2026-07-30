@@ -46,7 +46,7 @@ async def obter(rivalidade_id: int, service: RivalidadeService = Depends(_get_se
     try:
         return await service.buscar(rivalidade_id)
     except RivalidadeNaoEncontrada as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 @router.post("/", response_model=RivalidadeRead, status_code=status.HTTP_201_CREATED)
@@ -59,7 +59,7 @@ async def criar(data: RivalidadeCreate, service: RivalidadeService = Depends(_ge
             nivel=data.nivel,
         )
     except (RivalidadeJaExiste, NivelInvalido) as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
 
 
 @router.post("/{rivalidade_id}/escalar", response_model=RivalidadeRead)
@@ -67,7 +67,7 @@ async def escalar(rivalidade_id: int, service: RivalidadeService = Depends(_get_
     try:
         return await service.escalar(rivalidade_id)
     except RivalidadeNaoEncontrada as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 @router.put("/{rivalidade_id}", response_model=RivalidadeRead)
@@ -85,9 +85,9 @@ async def atualizar(
     try:
         return await service.atualizar(rivalidade_id, update_data)
     except RivalidadeNaoEncontrada as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
     except NivelInvalido as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
 
 
 @router.delete("/{rivalidade_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -95,4 +95,4 @@ async def remover(rivalidade_id: int, service: RivalidadeService = Depends(_get_
     try:
         await service.remover(rivalidade_id)
     except RivalidadeNaoEncontrada as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e

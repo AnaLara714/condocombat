@@ -28,7 +28,7 @@ async def obter_morador(morador_id: int, service: MoradorService = Depends(_get_
     try:
         return await service.buscar(morador_id)
     except MoradorNaoEncontrado as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
 @router.post("/", response_model=MoradorRead, status_code=status.HTTP_201_CREATED)
@@ -43,7 +43,7 @@ async def criar_morador(data: MoradorCreate, service: MoradorService = Depends(_
             apartamento_id=data.apartamento_id,
         )
     except (MoradorComCPFJaExiste, MoradorComEmailJaExiste) as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
 
 
 @router.put("/{morador_id}", response_model=MoradorRead)
@@ -54,9 +54,9 @@ async def atualizar_morador(morador_id: int, data: MoradorUpdate, service: Morad
     try:
         return await service.atualizar(morador_id, update_data)
     except MoradorNaoEncontrado as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
     except (MoradorComCPFJaExiste, MoradorComEmailJaExiste) as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
 
 
 @router.delete("/{morador_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -64,4 +64,4 @@ async def remover_morador(morador_id: int, service: MoradorService = Depends(_ge
     try:
         await service.remover(morador_id)
     except MoradorNaoEncontrado as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e 
