@@ -75,7 +75,7 @@ async def remover(condominio_id: int, service: CondominioService = Depends(_get_
     """Remove um condomínio."""
     try:
         await service.remover(condominio_id)
-    except CondominioNaoEncontrado from exc:
+    except CondominioNaoEncontrado as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Condomínio {condominio_id} não encontrado",

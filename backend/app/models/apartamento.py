@@ -1,7 +1,15 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Float, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+if TYPE_CHECKING:
+    from app.models.condominio import Condominio
+    from app.models.morador import Morador
 
 
 class Apartamento(Base):
@@ -9,7 +17,10 @@ class Apartamento(Base):
 
     __table_args__ = (
         UniqueConstraint(
-            "numero", "bloco", "torre", "condominio_id",
+            "numero",
+            "bloco",
+            "torre",
+            "condominio_id",
             name="uq_apartamento_identificacao",
         ),
     )
@@ -19,13 +30,19 @@ class Apartamento(Base):
     bloco: Mapped[str | None] = mapped_column(String(10), nullable=True)
     torre: Mapped[str | None] = mapped_column(String(50), nullable=True)
     area: Mapped[float | None] = mapped_column(Float, nullable=True)
+
     condominio_id: Mapped[int] = mapped_column(
-        ForeignKey("condominios.id"), nullable=False, index=True
+        ForeignKey("condominios.id"),
+        nullable=False,
+        index=True,
     )
 
-    condominio: Mapped["Condominio"] = relationship(
-        "Condominio", back_populates="apartamentos"
+    condominio: Mapped[Condominio] = relationship(
+        "Condominio",
+        back_populates="apartamentos",
     )
-    moradores: Mapped[list["Morador"]] = relationship(
-        "Morador", back_populates="apartamento"
+
+    moradores: Mapped[list[Morador]] = relationship(
+        "Morador",
+        back_populates="apartamento",
     )
