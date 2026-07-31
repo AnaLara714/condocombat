@@ -27,14 +27,14 @@ class WSConnectionManager:
     """Gerencia conexões WebSocket com broadcast e heartbeat."""
 
     def __init__(
-    self,
-    heartbeat_interval: int = HEARTBEAT_INTERVAL,
-    pong_timeout: int = PONG_TIMEOUT,
-) -> None:
-    self._connections: dict[WebSocket, ConnectionInfo] = {}
-    self._heartbeat_tasks: dict[WebSocket, asyncio.Task] = {}
-    self._heartbeat_interval = heartbeat_interval
-    self._pong_timeout = pong_timeout
+        self,
+        heartbeat_interval: int = HEARTBEAT_INTERVAL,
+        pong_timeout: int = PONG_TIMEOUT,
+    ) -> None:
+        self._connections: dict[WebSocket, ConnectionInfo] = {}
+        self._heartbeat_tasks: dict[WebSocket, asyncio.Task] = {}
+        self._heartbeat_interval = heartbeat_interval
+        self._pong_timeout = pong_timeout
 
     @property
     def active_connections(self) -> int:
